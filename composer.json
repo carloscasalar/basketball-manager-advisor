@@ -1,0 +1,17 @@
+{
+    "name": "carloscasalar/basketball-manager-advisor",
+    "license": "MIT",
+    "type": "project",
+    "description": "Simple exercise to learn phpUnit and Symfony",
+    "autoload": {
+        "psr-0": { "": "src/" }
+    },
+    "require": {
+        "phpunit/phpunit": "~3.7"
+    },
+    "scripts": {
+        "run": "Excercise\\Run::execute",
+        "test": "phpunit",
+        "test-checklist": "phpunit --testdox"
+    }
+}
