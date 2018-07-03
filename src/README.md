@@ -10,11 +10,11 @@ Each member has this attributes:
   - Uniform number.
   - Name in the back of the t-shirt.
   - Ideal role:
-    - Point Guard.
-    - Shooting guard. 
-    - Small Forward.
-    - Power Forward.
-    - Center.
+    - `Point Guard`.
+    - `Shooting guard`. 
+    - `Small Forward`.
+    - `Power Forward`.
+    - `Center`.
   - Coach score for the team member (integer from 0 to 100).
     
 ## Remove team member
@@ -23,23 +23,23 @@ Players should be removed by uniform number.
 ## Team member list
 Should return a team member list in JSON format.
 It should be able to order the list by any of the following criteria:
-    - Uniform number.
-    - Ideal rol and score.
+  - Uniform number.
+  - Ideal rol and score.
 
 ## Tactics
 The application must have these system default tactics:
-    - Defense 1-3-1: Point Guard + Shooting Guard + Shooting Guard + Power Forward + Center   
-    - Zone defense 2-3: Point Guard + Point Guard + Small Forward + Center + Power Forward
-    - Attack 2-2-1: Point Guard + Small Forward + Shooting Guard + Center + Power Forward
+  - `Defense 1-3-1`: Point Guard + Shooting Guard + Shooting Guard + Power Forward + Center   
+  - `Zone defense 2-3`: Point Guard + Point Guard + Small Forward + Center + Power Forward
+  - `Attack 2-2-1`: Point Guard + Small Forward + Shooting Guard + Center + Power Forward
 
 ## Create custom tactic
 System should allow to add custom tactics defined as these:
-    - Tactic name.
-    - Role in position 1.
-    - Role in position 2.
-    - Role in position 3.
-    - Role in position 4.
-    - Role in position 5.
+  - Tactic name.
+  - Role in position 1.
+  - Role in position 2.
+  - Role in position 3.
+  - Role in position 4.
+  - Role in position 5.
 
 ## List tactics
 System should allow to print a tactic list (in any order), both system default and customized.    
