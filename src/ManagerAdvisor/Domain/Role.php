@@ -1,6 +1,6 @@
 <?php
     declare(strict_types=1);
-    namespace ManagerAdvisor\domain;
+    namespace ManagerAdvisor\Domain;
 
     class Role {
         private $code;

@@ -1,6 +1,6 @@
 <?php
     declare(strict_types=1);
-    namespace ManagerAdvisor\domain;
+    namespace ManagerAdvisor\Domain;
 
     interface TeamMemberRepositoryInterface {
         public function findByUniformNumber(int $uniformNUmber): ?TeamMember;

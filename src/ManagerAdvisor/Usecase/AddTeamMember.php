@@ -16,6 +16,7 @@
         }
 
         public function execute(TeamMember $teamMember): void {
+            $teamMember->validate();
             $this->assertDoesNotExistOtherMemberWithSameUniformNumber($teamMember->getUniformNumber());
 
             $this->teamMemberRepository->create($teamMember);
@@ -24,7 +25,7 @@
         private function assertDoesNotExistOtherMemberWithSameUniformNumber(int $uniformNumber): void {
             $existingPlayer = $this->teamMemberRepository->findByUniformNumber($uniformNumber);
 
-            if(!is_null($existingPlayer)){
+            if (!is_null($existingPlayer)) {
                 throw new DuplicateUniformNameException($uniformNumber);
             }
         }
