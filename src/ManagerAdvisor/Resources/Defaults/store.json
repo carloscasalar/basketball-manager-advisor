@@ -1,0 +1,60 @@
+{
+  "teamMembers": [],
+  "roles": [
+    {
+      "code": "PG",
+      "description": "Point Guard"
+    },
+    {
+      "code": "SG",
+      "description": "Shooting Guard"
+    },
+    {
+      "code": "SF",
+      "description": "Small Forward"
+    },
+    {
+      "code": "PF",
+      "description": "Power Forward"
+    },
+    {
+      "code": "C",
+      "description": "Center"
+    }
+  ],
+  "strategies": [
+    {
+      "isEditable": false,
+      "code": "Defense 1-3-1",
+      "positions": [
+        "PG",
+        "SG",
+        "SG",
+        "PF",
+        "C"
+      ]
+    },
+    {
+      "isEditable": false,
+      "code": "Zone defense 2-3",
+      "positions": [
+        "PG",
+        "PG",
+        "SF",
+        "C",
+        "PF"
+      ]
+    },
+    {
+      "isEditable": false,
+      "code": "Attack 2-2-1",
+      "positions": [
+        "PG",
+        "SF",
+        "SG",
+        "C",
+        "PF"
+      ]
+    }
+  ]
+}
