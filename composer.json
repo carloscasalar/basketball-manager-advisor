@@ -1,17 +1,23 @@
 {
-    "name": "carloscasalar/basketball-manager-advisor",
-    "license": "MIT",
-    "type": "project",
-    "description": "Simple exercise to learn phpUnit and Symfony",
-    "autoload": {
-        "psr-0": { "": "src/" }
-    },
-    "require": {
-        "phpunit/phpunit": "~3.7"
-    },
-    "scripts": {
-        "run": "Excercise\\Run::execute",
-        "test": "phpunit",
-        "test-checklist": "phpunit --testdox"
+  "name": "carloscasalar/basketball-manager-advisor",
+  "license": "MIT",
+  "type": "project",
+  "description": "Simple exercise to learn phpUnit and Symfony",
+  "autoload": {
+    "psr-0": {
+      "": "src/"
     }
+  },
+  "require": {
+    "symfony/console": "v4.1.1",
+    "phpunit/phpunit": "^7"
+  },
+  "require-dev": {
+    "mockery/mockery": "@stable"
+  },
+  "scripts": {
+    "run": "Excercise\\Run::execute",
+    "test": "phpunit",
+    "test-checklist": "phpunit --testdox"
+  }
 }

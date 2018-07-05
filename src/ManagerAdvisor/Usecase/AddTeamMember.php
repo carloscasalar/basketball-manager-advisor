@@ -1,0 +1,31 @@
+<?php
+    declare(strict_types=1);
+
+    namespace ManagerAdvisor\usecase;
+
+    use ManagerAdvisor\Domain\DuplicateUniformNameException;
+    use ManagerAdvisor\Domain\TeamMember;
+    use ManagerAdvisor\Domain\TeamMemberRepositoryInterface;
+
+    class AddTeamMember {
+
+        private $teamMemberRepository;
+
+        public function __construct(TeamMemberRepositoryInterface $teamMemberRepository) {
+            $this->teamMemberRepository = $teamMemberRepository;
+        }
+
+        public function execute(TeamMember $teamMember): void {
+            $this->assertDoesNotExistOtherMemberWithSameUniformNumber($teamMember->getUniformNumber());
+
+            $this->teamMemberRepository->create($teamMember);
+        }
+
+        private function assertDoesNotExistOtherMemberWithSameUniformNumber(int $uniformNumber): void {
+            $existingPlayer = $this->teamMemberRepository->findByUniformNumber($uniformNumber);
+
+            if(!is_null($existingPlayer)){
+                throw new DuplicateUniformNameException($uniformNumber);
+            }
+        }
+    }

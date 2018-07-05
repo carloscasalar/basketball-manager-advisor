@@ -1,6 +1,6 @@
 # The exercise
 
-You have to write a simple command line app which is a basketball manager advisor. 
+You have to write a simple command line ManagerAdvisor which is a basketball manager advisor. 
 It should be able to manage team members, the team tactics and also be able to suggest the best tactic. 
 
 The following use cases should be implemented:
