@@ -4,7 +4,7 @@
 
     use Symfony\Component\Filesystem\Filesystem;
 
-    class Store {
+    class StoreManager {
         const DEFAULT_STORE_FILE = 'src/ManagerAdvisor/Resources/Defaults/store.json';
         const STORE_FILE_NAME = 'store.json';
 

@@ -7,16 +7,16 @@
     use Symfony\Component\Filesystem\Filesystem;
     use Symfony\Component\Finder\Finder;
 
-    use ManagerAdvisor\Persistence\Store;
+    use ManagerAdvisor\Persistence\StoreManager;
 
-    class StoreTest extends TestCase {
+    class StoreManagerTest extends TestCase {
 
         const TEST_STORE_FOLDER_PATH = 'src/ManagerAdvisor/Resources/Test';
         const STORE_FILE_PATH = self::TEST_STORE_FOLDER_PATH . '/store.json';
         const EMPTY_JSON_CONTENT = '{}';
 
         /**
-         * @var Store
+         * @var StoreManager
          */
         private $store;
         private $fileSystem;
@@ -26,7 +26,7 @@
         private $finder;
 
         protected function setUp() {
-            $this->store = new Store(self::TEST_STORE_FOLDER_PATH);
+            $this->store = new StoreManager(self::TEST_STORE_FOLDER_PATH);
             $this->fileSystem = new Filesystem();
             $this->finder = new Finder();
 
