@@ -18,7 +18,7 @@
         /**
          * @var StoreManager
          */
-        private $store;
+        private $storeManager;
         private $fileSystem;
         /**
          * @var Finder
@@ -26,7 +26,7 @@
         private $finder;
 
         protected function setUp() {
-            $this->store = new StoreManager(self::TEST_STORE_FOLDER_PATH);
+            $this->storeManager = new StoreManager(self::TEST_STORE_FOLDER_PATH);
             $this->fileSystem = new Filesystem();
             $this->finder = new Finder();
 
@@ -43,7 +43,7 @@
         public function store_initialization_should_write_new_store_file_if_it_does_not_exists() {
             $existsStoreFileBeforeInit = $this->fileSystem->exists(self::STORE_FILE_PATH);
 
-            $this->store->init();
+            $this->storeManager->init();
 
             $existsStoreFileAfterInit = $this->fileSystem->exists(self::STORE_FILE_PATH);
 
@@ -57,7 +57,7 @@
         public function store_initialization_should_not_override_existing_store_file() {
             $this->fileSystem->dumpFile(self::STORE_FILE_PATH, self::EMPTY_JSON_CONTENT);
 
-            $this->store->init();
+            $this->storeManager->init();
 
             $fileSearch = $this->finder->in(self::TEST_STORE_FOLDER_PATH)->name('store.json');
 
@@ -68,6 +68,22 @@
 
             self::assertEquals(self::EMPTY_JSON_CONTENT, $storeContent, "Store file should not be override");
         }
+
+        /**
+         * @test
+         */
+        public function should_load_roles(){
+            $storeContent ='{"roles":[{"code":"A","description":"DESCRIPTION"}],"strategies":[]}';
+            $this->fileSystem->dumpFile(self::STORE_FILE_PATH, $storeContent);
+
+            $store = $this->storeManager->load();
+
+            self::assertNotNull($store, "Store should be loaded");
+            self::assertNotEmpty($store->getRoles(), "Roles should be loaded");
+            self::assertEquals("A", $store->getRoles()[0]->getCode());
+            self::assertEquals("DESCRIPTION", $store->getRoles()[0]->getDescription());
+        }
+
 
         public function tearDown() {
             parent::tearDown();

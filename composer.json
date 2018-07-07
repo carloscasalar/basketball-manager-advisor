@@ -13,7 +13,8 @@
     "phpunit/phpunit": "^7",
     "symfony/serializer": "^4.1",
     "symfony/filesystem": "^4.1",
-    "symfony/finder": "^4.1"
+    "symfony/finder": "^4.1",
+    "symfony/property-access": "^4.1"
   },
   "require-dev": {
     "mockery/mockery": "@stable"
