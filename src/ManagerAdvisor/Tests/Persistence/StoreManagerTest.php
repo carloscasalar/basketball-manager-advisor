@@ -6,23 +6,13 @@
     use ManagerAdvisor\Persistence\Store;
     use ManagerAdvisor\Persistence\StrategyEntity;
     use ManagerAdvisor\Persistence\TeamMemberEntity;
-    use PHPUnit\Framework\TestCase;
 
     use Symfony\Component\Filesystem\Filesystem;
     use Symfony\Component\Finder\Finder;
 
-    use ManagerAdvisor\Persistence\StoreManager;
+    class StoreManagerTest extends StoreAbstractTest {
 
-    class StoreManagerTest extends TestCase {
-
-        const TEST_STORE_FOLDER_PATH = 'src/ManagerAdvisor/Resources/Test';
-        const STORE_FILE_PATH = self::TEST_STORE_FOLDER_PATH . '/store.json';
         const EMPTY_JSON_CONTENT = '{}';
-
-        /**
-         * @var StoreManager
-         */
-        private $storeManager;
 
         /**
          * @var Filesystem
@@ -35,15 +25,14 @@
         private $finder;
 
         protected function setUp() {
-            $this->storeManager = new StoreManager(self::TEST_STORE_FOLDER_PATH);
+            parent::setUp();
+
             $this->fileSystem = new Filesystem();
             $this->finder = new Finder();
-
-            $this->cleanTestStoreDir();
         }
 
-        private function cleanTestStoreDir() {
-            $this->fileSystem->remove(self::STORE_FILE_PATH);
+        protected function tearDown() {
+            parent::tearDown();
         }
 
         /**
@@ -169,11 +158,6 @@
                 . '"teamMembers":[{"uniformNumber":9,"name":"Player A","role":"A","coachScore":50}]}';
 
             self::assertEquals($expectedStoreContent, $storeContent, "Store not persisted as expected");
-        }
-
-        public function tearDown() {
-            parent::tearDown();
-            $this->fileSystem->remove(self::STORE_FILE_PATH);
         }
 
         private function persistStoreFile(string $storeContent): void {
