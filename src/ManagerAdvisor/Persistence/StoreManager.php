@@ -33,7 +33,9 @@
 
             $strategies = $this->getStrategies($normalizedStoreContent);
 
-            return new Store($roles, $strategies);
+            $teamMembers = $this->getTeamMembers($normalizedStoreContent);
+
+            return new Store($roles, $strategies, $teamMembers);
         }
 
         public function persist($store): void {
@@ -70,19 +72,30 @@
         }
 
         private function getRoles($normalizedStoreContent): array {
-            $roles = [];
-            foreach ($normalizedStoreContent['roles'] as $roleArray) {
-                $roles[] = $this->serializer->denormalize($roleArray, RoleEntity::class);
-            }
-            return $roles;
+            return array_map(
+                function (array $normalizedRole) {
+                    return $this->serializer->denormalize($normalizedRole, RoleEntity::class);
+                },
+                $normalizedStoreContent['roles']
+            );
         }
 
         private function getStrategies($normalizedStoreContent): array {
-            $strategies = [];
-            foreach ($normalizedStoreContent['strategies'] as $strategyArray) {
-                $strategies[] = $this->serializer->denormalize($strategyArray, StrategyEntity::class);
-            }
-            return $strategies;
+            return array_map(
+                function (array $normalizedStrategy) {
+                    return $this->serializer->denormalize($normalizedStrategy, StrategyEntity::class);
+                },
+                $normalizedStoreContent['strategies']
+            );
+        }
+
+        private function getTeamMembers($normalizedStoreContent): array {
+            return array_map(
+                function (array $normalizedTeamMember) {
+                    return $this->serializer->denormalize($normalizedTeamMember, TeamMemberEntity::class);
+                },
+                $normalizedStoreContent['teamMembers']
+            );
         }
 
     }

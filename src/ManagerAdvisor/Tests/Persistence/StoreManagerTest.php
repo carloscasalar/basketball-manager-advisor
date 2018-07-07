@@ -5,6 +5,7 @@
     use ManagerAdvisor\Persistence\RoleEntity;
     use ManagerAdvisor\Persistence\Store;
     use ManagerAdvisor\Persistence\StrategyEntity;
+    use ManagerAdvisor\Persistence\TeamMemberEntity;
     use PHPUnit\Framework\TestCase;
 
     use Symfony\Component\Filesystem\Filesystem;
@@ -76,7 +77,13 @@
          * @test
          */
         public function should_load_roles() {
-            $storeContent = '{"roles":[{"code":"A","description":"DESCRIPTION"}],"strategies":[]}';
+            $storeContent =
+                '{
+                   "roles":[{"code":"A","description":"DESCRIPTION"}],
+                   "strategies":[],
+                   "teamMembers":[]
+                 }';
+
             $this->persistStoreFile($storeContent);
 
             $store = $this->storeManager->load();
@@ -91,7 +98,17 @@
          * @test
          */
         public function should_load_strategies() {
-            $storeContent = '{"roles":[],"strategies":[{"isEditable":false,"code":"Strategy A","positions":["A","A","A","A","A"]}]}';
+            $storeContent =
+                '{
+                  "roles":[],
+                  "strategies":[{
+                    "isEditable":false,
+                    "code":"Strategy A",
+                    "positions": ["A","A","A","A","A"]
+                  }],
+                  "teamMembers":[]
+                 }';
+
             $this->persistStoreFile($storeContent);
 
             $store = $this->storeManager->load();
@@ -107,17 +124,49 @@
         /**
          * @test
          */
+        public function should_load_teamMembers() {
+            $storeContent =
+                '{
+                  "roles":[],
+                  "strategies":[],
+                  "teamMembers":[{
+                    "uniformNumber": 7,
+                    "name": "Player A",
+                    "role": "A",
+                    "coachScore": 50
+                  }]
+                 }';
+
+            $this->persistStoreFile($storeContent);
+
+            $store = $this->storeManager->load();
+
+            self::assertNotNull($store, "Store should be loaded");
+            self::assertNotEmpty($store->getTeamMembers(), "Team members should be loaded");
+            $player = $store->getTeamMembers()[0];
+            self::assertEquals(7,$player->getUniformNumber(), "Uniform number should be restored");
+            self::assertEquals("Player A",$player->getName(), "Name should be restored");
+            self::assertEquals("A",$player->getRole(), "Role should be restored");
+            self::assertEquals(50,$player->getCoachScore(), "Score should be restored");
+        }
+
+        /**
+         * @test
+         */
         public function should_persist_store_to_filesystem() {
             $role = new RoleEntity("A", "Role A");
             $strategy = new StrategyEntity(true, "Strategy A", ["A", "A", "A", "A", "A"]);
+            $teamMember = new TeamMemberEntity(9, "Player A", "A", 50);
 
-            $store = new Store([$role], [$strategy]);
+            $store = new Store([$role], [$strategy], [$teamMember]);
 
             $this->storeManager->persist($store);
 
             $storeContent = $this->readStoreFromDisk();
 
-            $expectedStoreContent = '{"roles":[{"code":"A","description":"Role A"}],"strategies":[{"editable":true,"code":"Strategy A","positions":["A","A","A","A","A"]}]}';
+            $expectedStoreContent = '{"roles":[{"code":"A","description":"Role A"}],'
+                . '"strategies":[{"editable":true,"code":"Strategy A","positions":["A","A","A","A","A"]}],'
+                . '"teamMembers":[{"uniformNumber":9,"name":"Player A","role":"A","coachScore":50}]}';
 
             self::assertEquals($expectedStoreContent, $storeContent, "Store not persisted as expected");
         }
