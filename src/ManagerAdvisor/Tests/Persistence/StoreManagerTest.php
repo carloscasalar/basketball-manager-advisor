@@ -19,7 +19,12 @@
          * @var StoreManager
          */
         private $storeManager;
+
+        /**
+         * @var Filesystem
+         */
         private $fileSystem;
+
         /**
          * @var Finder
          */
@@ -72,9 +77,9 @@
         /**
          * @test
          */
-        public function should_load_roles(){
-            $storeContent ='{"roles":[{"code":"A","description":"DESCRIPTION"}],"strategies":[]}';
-            $this->fileSystem->dumpFile(self::STORE_FILE_PATH, $storeContent);
+        public function should_load_roles() {
+            $storeContent = '{"roles":[{"code":"A","description":"DESCRIPTION"}],"strategies":[]}';
+            $this->persistStoreFile($storeContent);
 
             $store = $this->storeManager->load();
 
@@ -84,9 +89,29 @@
             self::assertEquals("DESCRIPTION", $store->getRoles()[0]->getDescription());
         }
 
+        /**
+         * @test
+         */
+        public function should_load_strategies() {
+            $storeContent = '{"roles":[],"strategies":[{"isEditable":false,"code":"Strategy A","positions":["A","A","A","A","A"]}]}';
+            $this->persistStoreFile($storeContent);
+
+            $store = $this->storeManager->load();
+
+            self::assertNotNull($store, "Store should be loaded");
+            self::assertNotEmpty($store->getStrategies(), "Strategies should be loaded");
+            $strategy = $store->getStrategies()[0];
+            self::assertEquals(false,$strategy->isEditable(), "Strategy editable value should be restored");
+            self::assertEquals("Strategy A", $strategy->getCode(), "Strategy code should be restored");
+            self::assertEquals(["A", "A", "A","A","A"], $strategy->getPositions(), "Strategy positions should be restored");
+        }
 
         public function tearDown() {
             parent::tearDown();
             $this->fileSystem->remove(self::STORE_FILE_PATH);
+        }
+
+        private function persistStoreFile(string $storeContent): void {
+            $this->fileSystem->dumpFile(self::STORE_FILE_PATH, $storeContent);
         }
     }

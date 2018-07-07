@@ -2,13 +2,11 @@
 
     namespace ManagerAdvisor\Persistence;
 
-    use ManagerAdvisor\Domain\Role;
     use Symfony\Component\Filesystem\Filesystem;
     use Symfony\Component\Finder\Finder;
     use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
     use Symfony\Component\Serializer\Serializer;
     use Symfony\Component\Serializer\Encoder\JsonEncoder;
-    use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
     class StoreManager {
         const DEFAULT_STORE_FILE = 'src/ManagerAdvisor/Resources/Defaults/store.json';
@@ -16,11 +14,12 @@
 
         private $storePath;
         private $fileSystem;
-        private $store;
+        private $serializer;
 
         public function __construct(string $storePath) {
             $this->storePath = $storePath;
             $this->fileSystem = new Filesystem();
+            $this->serializer = $this->getSerializer();
         }
 
         public function init(): void {
@@ -28,34 +27,56 @@
         }
 
         public function load(): Store {
-            $finder = new Finder();
-            $fileSearch = $finder->in($this->storePath)->name(self::STORE_FILE_NAME);
+            $normalizedStoreContent = $this->parseStoreFile();
 
-            $storeContent=null;
-            foreach ($fileSearch as $file){
-                $storeContent = $file->getContents();
-            }
+            $roles = $this->getRoles($normalizedStoreContent);
 
-            if($storeContent==null){
-                throw new \RuntimeException("store file not found. Maybe you forget call StoreManager::init");
-            }
-            $normalizedStoreContent = json_decode($storeContent, true);
+            $strategies = $this->getStrategies($normalizedStoreContent);
 
-            $encoders = array(new JsonEncoder());
-            $normalizers = array(new GetSetMethodNormalizer());
-
-            $serializer = new Serializer($normalizers, $encoders);
-
-
-            $roles = [];
-            foreach ($normalizedStoreContent['roles'] as $roleArray){
-                $roles[] = $serializer->denormalize($roleArray, Role::class);
-            }
-
-            return new Store($roles, []);
+            return new Store($roles, $strategies);
         }
 
         private function storeFilePath(): string {
             return $this->storePath . '/' . self::STORE_FILE_NAME;
+        }
+
+        private function parseStoreFile(): array {
+            $finder = new Finder();
+            $fileSearch = $finder->in($this->storePath)->name(self::STORE_FILE_NAME);
+
+            $storeContent = null;
+            foreach ($fileSearch as $file) {
+                $storeContent = $file->getContents();
+            }
+
+            if ($storeContent == null) {
+                throw new \RuntimeException("store file not found. Maybe you forget call StoreManager::init");
+            }
+            $normalizedStoreContent = json_decode($storeContent, true);
+            return $normalizedStoreContent;
+        }
+
+        private function getSerializer(): Serializer {
+            $encoders = array(new JsonEncoder());
+            $normalizers = array(new GetSetMethodNormalizer());
+
+            $serializer = new Serializer($normalizers, $encoders);
+            return $serializer;
+        }
+
+        private function getRoles($normalizedStoreContent): array {
+            $roles = [];
+            foreach ($normalizedStoreContent['roles'] as $roleArray) {
+                $roles[] = $this->serializer->denormalize($roleArray, RoleEntity::class);
+            }
+            return $roles;
+        }
+
+        private function getStrategies($normalizedStoreContent): array {
+            $strategies = [];
+            foreach ($normalizedStoreContent['strategies'] as $strategyArray) {
+                $strategies[] = $this->serializer->denormalize($strategyArray, StrategyEntity::class);
+            }
+            return $strategies;
         }
     }
