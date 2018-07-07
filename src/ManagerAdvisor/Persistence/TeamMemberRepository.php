@@ -40,7 +40,10 @@
         }
 
         public function create(TeamMember $teamMember): void {
-            // TODO: Implement create() method.
+            $store = $this->storeManager->load();
+            $teamMemberEntity = $this->teamMemberAdapter->toTeamMemberEntity($teamMember);
+            $store->addTeamMember($teamMemberEntity);
+            $this->storeManager->persist($store);
         }
 
         private function findTeamEntityByUniformNumber(Store $store, int $uniformNUmber): ?TeamMemberEntity {

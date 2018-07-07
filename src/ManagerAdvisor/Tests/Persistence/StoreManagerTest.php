@@ -91,7 +91,7 @@
                 '{
                   "roles":[],
                   "strategies":[{
-                    "isEditable":false,
+                    "editable":false,
                     "code":"Strategy A",
                     "positions": ["A","A","A","A","A"]
                   }],
@@ -133,10 +133,10 @@
             self::assertNotNull($store, "Store should be loaded");
             self::assertNotEmpty($store->getTeamMembers(), "Team members should be loaded");
             $player = $store->getTeamMembers()[0];
-            self::assertEquals(7,$player->getUniformNumber(), "Uniform number should be restored");
-            self::assertEquals("Player A",$player->getName(), "Name should be restored");
-            self::assertEquals("A",$player->getRole(), "Role should be restored");
-            self::assertEquals(50,$player->getCoachScore(), "Score should be restored");
+            self::assertEquals(7, $player->getUniformNumber(), "Uniform number should be restored");
+            self::assertEquals("Player A", $player->getName(), "Name should be restored");
+            self::assertEquals("A", $player->getRole(), "Role should be restored");
+            self::assertEquals(50, $player->getCoachScore(), "Score should be restored");
         }
 
         /**

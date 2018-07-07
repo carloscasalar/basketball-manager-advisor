@@ -6,7 +6,7 @@
         /**
          * @var bool
          */
-        private $isEditable;
+        private $editable;
 
         /**
          * @var string
@@ -20,12 +20,12 @@
 
         /**
          * StrategyEntity constructor.
-         * @param bool $isEditable
+         * @param bool $editable
          * @param string $code
          * @param string[] $positions
          */
-        public function __construct(bool $isEditable, string $code, array $positions) {
-            $this->isEditable = $isEditable;
+        public function __construct(bool $editable, string $code, array $positions) {
+            $this->editable = $editable;
             $this->code = $code;
             $this->positions = $positions;
         }
@@ -34,15 +34,16 @@
          * @return bool
          */
         public function isEditable(): bool {
-            return $this->isEditable;
+            return $this->editable;
         }
 
         /**
-         * @param bool $isEditable
+         * @param bool $editable
          */
-        public function setIsEditable(bool $isEditable): void {
-            $this->isEditable = $isEditable;
+        public function setEditable(bool $editable): void {
+            $this->editable = $editable;
         }
+
 
         /**
          * @return string

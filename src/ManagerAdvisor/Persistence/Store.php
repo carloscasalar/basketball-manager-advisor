@@ -73,4 +73,8 @@
             $this->teamMembers = $teamMembers;
         }
 
+        public function addTeamMember(TeamMemberEntity $teamMemberEntity): void {
+            $this->teamMembers[] = $teamMemberEntity;
+        }
+
     }

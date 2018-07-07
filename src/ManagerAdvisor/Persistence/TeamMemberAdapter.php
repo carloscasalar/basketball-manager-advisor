@@ -13,4 +13,13 @@
                 $teamMemberEntity->getCoachScore()
             );
         }
+
+        public function toTeamMemberEntity(TeamMember $teamMember): TeamMemberEntity {
+            return new TeamMemberEntity(
+              $teamMember->getUniformNumber(),
+              $teamMember->getName(),
+              $teamMember->getIdealRole()->getCode(),
+              $teamMember->getCoachScore()
+            );
+        }
     }

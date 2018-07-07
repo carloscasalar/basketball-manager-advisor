@@ -23,7 +23,7 @@
   ],
   "strategies": [
     {
-      "isEditable": false,
+      "editable": false,
       "code": "Defense 1-3-1",
       "positions": [
         "PG",
@@ -34,7 +34,7 @@
       ]
     },
     {
-      "isEditable": false,
+      "editable": false,
       "code": "Zone defense 2-3",
       "positions": [
         "PG",
@@ -45,7 +45,7 @@
       ]
     },
     {
-      "isEditable": false,
+      "editable": false,
       "code": "Attack 2-2-1",
       "positions": [
         "PG",
@@ -56,5 +56,5 @@
       ]
     }
   ],
-  "teamMembers":[]
+  "teamMembers": []
 }
