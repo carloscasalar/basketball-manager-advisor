@@ -2,6 +2,9 @@
 
     namespace ManagerAdvisor\Tests\Persistence;
 
+    use ManagerAdvisor\Persistence\RoleEntity;
+    use ManagerAdvisor\Persistence\Store;
+    use ManagerAdvisor\Persistence\StrategyEntity;
     use PHPUnit\Framework\TestCase;
 
     use Symfony\Component\Filesystem\Filesystem;
@@ -64,12 +67,7 @@
 
             $this->storeManager->init();
 
-            $fileSearch = $this->finder->in(self::TEST_STORE_FOLDER_PATH)->name('store.json');
-
-            $storeContent = null;
-            foreach ($fileSearch as $file) {
-                $storeContent = $file->getContents();
-            }
+            $storeContent = $this->readStoreFromDisk();
 
             self::assertEquals(self::EMPTY_JSON_CONTENT, $storeContent, "Store file should not be override");
         }
@@ -101,9 +99,27 @@
             self::assertNotNull($store, "Store should be loaded");
             self::assertNotEmpty($store->getStrategies(), "Strategies should be loaded");
             $strategy = $store->getStrategies()[0];
-            self::assertEquals(false,$strategy->isEditable(), "Strategy editable value should be restored");
+            self::assertEquals(false, $strategy->isEditable(), "Strategy editable value should be restored");
             self::assertEquals("Strategy A", $strategy->getCode(), "Strategy code should be restored");
-            self::assertEquals(["A", "A", "A","A","A"], $strategy->getPositions(), "Strategy positions should be restored");
+            self::assertEquals(["A", "A", "A", "A", "A"], $strategy->getPositions(), "Strategy positions should be restored");
+        }
+
+        /**
+         * @test
+         */
+        public function should_persist_store_to_filesystem() {
+            $role = new RoleEntity("A", "Role A");
+            $strategy = new StrategyEntity(true, "Strategy A", ["A", "A", "A", "A", "A"]);
+
+            $store = new Store([$role], [$strategy]);
+
+            $this->storeManager->persist($store);
+
+            $storeContent = $this->readStoreFromDisk();
+
+            $expectedStoreContent = '{"roles":[{"code":"A","description":"Role A"}],"strategies":[{"editable":true,"code":"Strategy A","positions":["A","A","A","A","A"]}]}';
+
+            self::assertEquals($expectedStoreContent, $storeContent, "Store not persisted as expected");
         }
 
         public function tearDown() {
@@ -113,5 +129,15 @@
 
         private function persistStoreFile(string $storeContent): void {
             $this->fileSystem->dumpFile(self::STORE_FILE_PATH, $storeContent);
+        }
+
+        private function readStoreFromDisk(): ?string {
+            $fileSearch = $this->finder->in(self::TEST_STORE_FOLDER_PATH)->name('store.json');
+
+            $storeContent = null;
+            foreach ($fileSearch as $file) {
+                $storeContent = $file->getContents();
+            }
+            return $storeContent;
         }
     }

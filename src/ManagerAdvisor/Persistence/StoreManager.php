@@ -36,6 +36,11 @@
             return new Store($roles, $strategies);
         }
 
+        public function persist($store): void {
+            $storeContent = $this->serializer->serialize($store, 'json');
+            $this->fileSystem->dumpFile($this->storeFilePath(), $storeContent);
+        }
+
         private function storeFilePath(): string {
             return $this->storePath . '/' . self::STORE_FILE_NAME;
         }
@@ -79,4 +84,5 @@
             }
             return $strategies;
         }
+
     }
