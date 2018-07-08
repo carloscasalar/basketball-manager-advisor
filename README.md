@@ -46,6 +46,21 @@ To show a list of all tests being launched:
     
     docker run --rm -it -v /YOUR/LOCAL/PROJECTS/DIR/basketball-manager-advisor:/opt -w /opt shippingdocker/php-composer:latest composer run-script test-checklist
 
+## Run de app
+
+You can run de app with the following command:
+
+    php bin/console
+    
+Also with composer command `run`:
+    
+    composer run-script run
+    
+If you don't have php or composer installed in your system you can run it with docker
+
+    docker run --rm -it -v /YOUR/LOCAL/PROJECTS/DIR/basketball-manager-advisor:/opt -w /opt shippingdocker/php-composer:latest php bin/console.php        
+    docker run --rm -it -v /YOUR/LOCAL/PROJECTS/DIR/basketball-manager-advisor:/opt -w /opt shippingdocker/php-composer:latest composer run-script run        
+
 ## PHPUnit cheatsheet
 
 You can use [matthiasnoback's](https://github.com/matthiasnoback) [PHPUnit cheatsheet](https://github.com/matthiasnoback/workshop-unit-testing/blob/master/cheatsheet.md)

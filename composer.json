@@ -20,7 +20,7 @@
     "mockery/mockery": "@stable"
   },
   "scripts": {
-    "run": "Excercise\\Run::execute",
+    "run": "bin/console.php",
     "test": "phpunit",
     "test-checklist": "phpunit --testdox"
   }

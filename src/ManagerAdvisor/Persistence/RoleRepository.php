@@ -20,12 +20,15 @@
             $this->roleAdapter = new RoleAdapter();
         }
 
-        public function getNormalizedRoles(): array{
+        public function getNormalizedRoles(): array {
             $store = $this->storeManager->load();
 
-            return array_reduce($store->getRoles(), function(array $normalized, RoleEntity $role){
-                $normalized[$role->getCode()] = $this->roleAdapter->toRole($role);
-                return $normalized;
-            }, []);
+            return array_reduce(
+                $store->getRoles(),
+                function (array $normalized, RoleEntity $role): array {
+                    $normalized[$role->getCode()] = $this->roleAdapter->toRole($role);
+                    return $normalized;
+                },
+                []);
         }
     }

@@ -1,5 +1,6 @@
 <?php
     declare(strict_types=1);
+
     namespace ManagerAdvisor\Injector;
 
     use ManagerAdvisor\Domain\RoleRepositoryInterface;
@@ -7,6 +8,7 @@
     use ManagerAdvisor\Persistence\RoleRepository;
     use ManagerAdvisor\Persistence\StoreManager;
     use ManagerAdvisor\Persistence\TeamMemberRepository;
+    use ManagerAdvisor\Query\RoleQueries;
     use ManagerAdvisor\usecase\AddTeamMember;
 
     class Injector {
@@ -29,14 +31,19 @@
         private $teamMemberRepository;
 
         /**
+         * @var RoleQueries
+         */
+        private $roleQueries;
+
+        /**
          * @var AddTeamMember
          */
         private $addTeamMember;
 
-        public function __construct(string $environment = self::PRODUCTION){
+        public function __construct(string $environment = self::PRODUCTION) {
             $storeConfig = [
-              self::PRODUCTION => 'resources/store',
-              self::TEST => 'resources/test'
+                self::PRODUCTION => 'resources/store',
+                self::TEST => 'resources/test'
             ];
 
             $this->storeManager = new StoreManager($storeConfig[$environment]);
@@ -44,6 +51,8 @@
 
             $this->roleRepository = new RoleRepository($this->storeManager);
             $this->teamMemberRepository = new TeamMemberRepository($this->storeManager, $this->roleRepository);
+
+            $this->roleQueries = new RoleQueries($this->roleRepository);
 
             $this->addTeamMember = new AddTeamMember($this->teamMemberRepository);
         }
@@ -67,6 +76,13 @@
          */
         public function getTeamMemberRepository(): TeamMemberRepositoryInterface {
             return $this->teamMemberRepository;
+        }
+
+        /**
+         * @return RoleQueries
+         */
+        public function getRoleQueries(): RoleQueries {
+            return $this->roleQueries;
         }
 
         /**
