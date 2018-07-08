@@ -47,6 +47,12 @@
             $this->storeManager->persist($store);
         }
 
+        public function deleteByUniformNumber(int $uniformNumber): void {
+            $store = $this->storeManager->load();
+            $store->removeTeamMemberByUniformNumber($uniformNumber);
+            $this->storeManager->persist($store);
+        }
+
         private function findTeamEntityByUniformNumber(Store $store, int $uniformNUmber): ?TeamMemberEntity {
             $searchMemberResult = array_filter(
                 $store->getTeamMembers(),
@@ -60,4 +66,16 @@
             }
             return $teamMemberEntity;
         }
+
+        public function findAll(): array {
+            $store = $this->storeManager->load();
+            $normalizedRoles = $this->roleRepository->getNormalizedRoles();
+            return array_map(
+                function (TeamMemberEntity $teamMemberEntity) use ($normalizedRoles): TeamMember {
+                    return $this->teamMemberAdapter->toTeamMember($teamMemberEntity, $normalizedRoles);
+                },
+                $store->getTeamMembers()
+            );
+        }
+
     }

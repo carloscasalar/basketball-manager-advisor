@@ -2,6 +2,7 @@
 
     namespace ManagerAdvisor\Command;
 
+    use ManagerAdvisor\Command\Questions\UniformNumberQuestion;
     use ManagerAdvisor\Domain\Role;
     use ManagerAdvisor\Domain\TeamMember;
     use ManagerAdvisor\Injector\Injector;
@@ -16,6 +17,7 @@
     class AddTeamMemberCommand extends Command {
         const UNIFORM_NUMBER = 'uniformNumber';
         const NAME = 'name';
+        const ENTER_UNIFORM_NUMBER = 'Enter uniform number';
 
         /**
          * @var RoleQueries
@@ -27,10 +29,16 @@
          */
         private $addTeamMember;
 
+        /**
+         * @var UniformNumberQuestion
+         */
+        private $uniformNumberQuestion;
+
         public function __construct(Injector $injector) {
             parent::__construct();
             $this->roleQueries = $injector->getRoleQueries();
             $this->addTeamMember = $injector->getAddTeamMember();
+            $this->uniformNumberQuestion = new UniformNumberQuestion(self::ENTER_UNIFORM_NUMBER);
         }
 
         protected function configure() {
@@ -43,7 +51,7 @@
         protected function execute(InputInterface $input, OutputInterface $output) {
             $helper = $this->getHelper('question');
 
-            $uniformNumber = $this->askUniformNumber($input, $output, $helper);
+            $uniformNumber = $this->uniformNumberQuestion->ask($input, $output, $helper);
             $name = $this->askTeamMemberName($input, $output, $helper);
             $selectedRole = $this->askIdealRole($input, $output, $helper);
             $coachScore = $this->askCoachScore($input, $output, $helper);
@@ -66,24 +74,6 @@
             }catch (\Exception $exception){
                 $output->writeln('<error>Error: '.$exception->getMessage().'</error>');
             }
-        }
-
-        private function askUniformNumber(InputInterface $input, OutputInterface $output, $helper): int {
-            $question = new Question('<question>Enter the uniform number: </question>');
-            $question->setValidator(function ($answer) {
-                if (is_null($answer)) {
-                    throw new \RuntimeException('The uniform number is required');
-                }
-                if (!intval($answer) > 0) {
-                    throw new \RuntimeException('The uniform number should be a number');
-                }
-
-                return $answer;
-            });
-            $question->setMaxAttempts(2);
-
-            $uniformNumber = intval($helper->ask($input, $output, $question));
-            return $uniformNumber;
         }
 
         private function askIdealRole(InputInterface $input, OutputInterface $output, $helper): Role {

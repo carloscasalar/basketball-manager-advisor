@@ -3,7 +3,7 @@
 
     namespace ManagerAdvisor\usecase;
 
-    use ManagerAdvisor\Domain\DuplicateUniformNameException;
+    use ManagerAdvisor\Domain\DuplicateUniformNumberException;
     use ManagerAdvisor\Domain\TeamMember;
     use ManagerAdvisor\Domain\TeamMemberRepositoryInterface;
 
@@ -26,7 +26,7 @@
             $existingPlayer = $this->teamMemberRepository->findByUniformNumber($uniformNumber);
 
             if (!is_null($existingPlayer)) {
-                throw new DuplicateUniformNameException($uniformNumber);
+                throw new DuplicateUniformNumberException($uniformNumber);
             }
         }
     }

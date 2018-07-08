@@ -59,3 +59,6 @@ Add a team member can be performed with this command:
 
     docker run --rm -it -v /YOUR/LOCAL/PROJECTS/DIR/kata-football:/opt -w /opt shippingdocker/php-composer:latest php bin/console.php addTeamMember
     
+To delete a team member:    
+
+    docker run --rm -it -v /YOUR/LOCAL/PROJECTS/DIR/kata-football:/opt -w /opt shippingdocker/php-composer:latest php bin/console.php deleteTeamMember
