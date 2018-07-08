@@ -60,4 +60,15 @@
             }
             return $teamMemberEntity;
         }
+
+        public function findAll(): array {
+            $store = $this->storeManager->load();
+            $normalizedRoles = $this->roleRepository->getNormalizedRoles();
+            return array_map(
+                function (TeamMemberEntity $teamMemberEntity) use ($normalizedRoles): TeamMember {
+                    return $this->teamMemberAdapter->toTeamMember($teamMemberEntity, $normalizedRoles);
+                },
+                $store->getTeamMembers()
+            );
+        }
     }

@@ -22,6 +22,9 @@
         const ROLE_CODE = 'Role code';
         const ROLE_DESCRIPTION = 'Role description';
 
+        /**
+         * @var TeamMemberRepositoryInterface
+         */
         private $teamMemberRepository;
         private $addTeamMember;
 

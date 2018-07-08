@@ -63,4 +63,9 @@
 
             self::assertEquals($this->defaultIdealRole, $defaultRole, 'Should return Point Guard as default ideal role');
         }
+
+        public function tearDown() {
+            parent::tearDown();
+            Mockery::close();
+        }
     }
