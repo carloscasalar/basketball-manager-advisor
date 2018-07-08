@@ -77,4 +77,13 @@
             $this->teamMembers[] = $teamMemberEntity;
         }
 
+        public function removeTeamMemberByUniformNumber($uniformNumber) {
+            $this->teamMembers = array_filter(
+              $this->teamMembers,
+              function (TeamMemberEntity $teamMember) use ($uniformNumber){
+                  return $teamMember->getUniformNumber() != $uniformNumber;
+              }
+            );
+        }
+
     }
