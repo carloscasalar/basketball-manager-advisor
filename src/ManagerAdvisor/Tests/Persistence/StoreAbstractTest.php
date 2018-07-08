@@ -7,7 +7,7 @@
 
     abstract class StoreAbstractTest extends TestCase {
 
-        const TEST_STORE_FOLDER_PATH = 'src/ManagerAdvisor/Resources/Test';
+        const TEST_STORE_FOLDER_PATH = 'resources/test';
         const STORE_FILE_PATH = self::TEST_STORE_FOLDER_PATH . '/store.json';
 
         /**

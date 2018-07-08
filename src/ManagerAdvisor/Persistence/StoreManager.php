@@ -9,7 +9,7 @@
     use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
     class StoreManager {
-        const DEFAULT_STORE_FILE = 'src/ManagerAdvisor/Resources/Defaults/store.json';
+        const DEFAULT_STORE_FILE = 'resources/defaults/store.json';
         const STORE_FILE_NAME = 'store.json';
 
         private $storePath;

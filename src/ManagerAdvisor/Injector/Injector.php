@@ -35,8 +35,8 @@
 
         public function __construct(string $environment = self::PRODUCTION){
             $storeConfig = [
-              self::PRODUCTION => 'src/ManagerAdvisor/Resources/Store',
-              self::TEST => 'src/ManagerAdvisor/Resources/Test'
+              self::PRODUCTION => 'resources/store',
+              self::TEST => 'resources/test'
             ];
 
             $this->storeManager = new StoreManager($storeConfig[$environment]);
