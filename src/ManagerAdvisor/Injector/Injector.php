@@ -10,6 +10,7 @@
     use ManagerAdvisor\Persistence\TeamMemberRepository;
     use ManagerAdvisor\Query\RoleQueries;
     use ManagerAdvisor\usecase\AddTeamMember;
+    use ManagerAdvisor\Usecase\DeleteTeamMember;
 
     class Injector {
         const PRODUCTION = 'PROD';
@@ -40,6 +41,11 @@
          */
         private $addTeamMember;
 
+        /**
+         * @var DeleteTeamMember
+         */
+        private $deleteTeamMember;
+
         public function __construct(string $environment = self::PRODUCTION) {
             $storeConfig = [
                 self::PRODUCTION => 'resources/store',
@@ -55,6 +61,7 @@
             $this->roleQueries = new RoleQueries($this->roleRepository);
 
             $this->addTeamMember = new AddTeamMember($this->teamMemberRepository);
+            $this->deleteTeamMember = new DeleteTeamMember($this->teamMemberRepository);
         }
 
         /**
@@ -91,4 +98,12 @@
         public function getAddTeamMember(): AddTeamMember {
             return $this->addTeamMember;
         }
+
+        /**
+         * @return DeleteTeamMember
+         */
+        public function getDeleteTeamMember(): DeleteTeamMember {
+            return $this->deleteTeamMember;
+        }
+
     }
