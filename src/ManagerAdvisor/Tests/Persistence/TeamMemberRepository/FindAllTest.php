@@ -9,13 +9,11 @@
     use ManagerAdvisor\Persistence\RoleEntity;
     use ManagerAdvisor\Persistence\RoleRepository;
     use ManagerAdvisor\Persistence\Store;
-    use ManagerAdvisor\Persistence\StoreManager;
     use ManagerAdvisor\Persistence\TeamMemberEntity;
     use ManagerAdvisor\Persistence\TeamMemberRepository;
-    use Mockery;
-    use PHPUnit\Framework\TestCase;
+    use ManagerAdvisor\Tests\Persistence\StoreAbstractTest;
 
-    class FindAllTest extends TestCase {
+    class FindAllTest extends StoreAbstractTest {
         const UNIFORM_NUMBER_ONE = 1;
         const UNIFORM_NUMBER_TWO = 2;
         const PLAYER_ONE_NAME = "Player one";
@@ -31,11 +29,6 @@
          */
         private $teamMemberRepository;
 
-        /**
-         * @var StoreManager
-         */
-        private $storeManager;
-
         protected function setUp() {
             parent::setUp();
 
@@ -48,9 +41,7 @@
 
             $store = new Store($roles, self::NO_STRATEGIES, $players);
 
-            $this->storeManager = Mockery::mock(StoreManager::class);
-            $this->storeManager->expects()->load()->andReturns($store);
-            $this->storeManager->expects()->load()->andReturns($store);
+            $this->storeManager->persist($store);
 
             $roleRepository = new RoleRepository($this->storeManager);
             $this->teamMemberRepository = new TeamMemberRepository($this->storeManager, $roleRepository);
@@ -68,11 +59,6 @@
             ];
 
             self::assertEquals($expectedPlayerList, $normalized, 'Should return player all team members in the same order they are stored');
-        }
-
-        public function tearDown() {
-            parent::tearDown();
-            Mockery::close();
         }
 
         private function getTeamMemberA(): TeamMember {
