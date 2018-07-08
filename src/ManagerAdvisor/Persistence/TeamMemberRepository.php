@@ -3,6 +3,7 @@
     namespace ManagerAdvisor\Persistence;
 
 
+    use ManagerAdvisor\Domain\RoleRepositoryInterface;
     use ManagerAdvisor\Domain\TeamMember;
     use ManagerAdvisor\Domain\TeamMemberRepositoryInterface;
 
@@ -15,7 +16,7 @@
         private $storeManager;
 
         /**
-         * @var RoleRepository
+         * @var RoleRepositoryInterface
          */
         private $roleRepository;
 
@@ -24,7 +25,7 @@
          */
         private $teamMemberAdapter;
 
-        public function __construct(StoreManager $storeManager, RoleRepository $roleRepository) {
+        public function __construct(StoreManager $storeManager, RoleRepositoryInterface $roleRepository) {
             $this->storeManager = $storeManager;
             $this->roleRepository = $roleRepository;
             $this->teamMemberAdapter = new TeamMemberAdapter();
@@ -32,7 +33,7 @@
 
         public function findByUniformNumber(int $uniformNUmber): ?TeamMember {
             $store = $this->storeManager->load();
-            $normalizedRoles = $this->roleRepository->getNormalizedRoles($store);
+            $normalizedRoles = $this->roleRepository->getNormalizedRoles();
 
             $teamMemberEntity = $this->findTeamEntityByUniformNumber($store, $uniformNUmber);
 

@@ -46,7 +46,7 @@
 
             $this->storeManager->persist($store);
 
-            $roleRepository = new RoleRepository();
+            $roleRepository = new RoleRepository($this->storeManager);
             $this->repository = new TeamMemberRepository($this->storeManager, $roleRepository);
         }
 

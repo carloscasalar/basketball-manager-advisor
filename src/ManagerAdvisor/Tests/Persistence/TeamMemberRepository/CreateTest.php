@@ -13,6 +13,7 @@
         const UNIFORM_NUMBER = 77;
         const NAME = 'Gimli';
         const SCORE = 1;
+        const IGNORE_CACHE = true;
 
         /**
          * @var TeamMemberRepositoryInterface
@@ -24,7 +25,7 @@
 
             $this->storeManager->init();
 
-            $roleRepository = new RoleRepository();
+            $roleRepository = new RoleRepository($this->storeManager);
             $this->teamMemberRepository = new TeamMemberRepository($this->storeManager, $roleRepository);
         }
 
@@ -42,7 +43,7 @@
 
             $this->teamMemberRepository->create($teamMember);
 
-            $store = $this->storeManager->load();
+            $store = $this->storeManager->load(self::IGNORE_CACHE);
 
             self::assertNotEmpty($store->getTeamMembers(), "Should store team member");
             $memberEntity = $store->getTeamMembers()[0];

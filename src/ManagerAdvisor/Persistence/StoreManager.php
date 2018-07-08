@@ -15,6 +15,7 @@
         private $storePath;
         private $fileSystem;
         private $serializer;
+        private $cachedStore;
 
         public function __construct(string $storePath) {
             $this->storePath = $storePath;
@@ -26,7 +27,11 @@
             $this->fileSystem->copy(self::DEFAULT_STORE_FILE, $this->storeFilePath());
         }
 
-        public function load(): Store {
+        public function load(bool $ignoreCache = false): Store {
+            if($this->isStoreCached() && !$ignoreCache){
+                return $this->cachedStore;
+            }
+
             $normalizedStoreContent = $this->parseStoreFile();
 
             $roles = $this->getRoles($normalizedStoreContent);
@@ -35,7 +40,9 @@
 
             $teamMembers = $this->getTeamMembers($normalizedStoreContent);
 
-            return new Store($roles, $strategies, $teamMembers);
+            $this->cachedStore = new Store($roles, $strategies, $teamMembers);
+
+            return $this->cachedStore;
         }
 
         public function persist($store): void {
@@ -98,4 +105,7 @@
             );
         }
 
+        private function isStoreCached(): bool {
+            return !is_null($this->cachedStore);
+        }
     }
