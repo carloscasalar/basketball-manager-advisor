@@ -55,7 +55,7 @@ System should store all create and delete operations made along with the time th
 
 # Run the exercise     
     
-Final exercise could be launched through composer with the `add-10-members` script:
+Add a team member can be performed with this command:
 
-    docker run --rm -it -v /YOUR/LOCAL/PROJECTS/DIR/kata-football:/opt -w /opt shippingdocker/php-composer:latest composer run-script add-10-members
+    docker run --rm -it -v /YOUR/LOCAL/PROJECTS/DIR/kata-football:/opt -w /opt shippingdocker/php-composer:latest php bin/console.php addTeamMember
     
