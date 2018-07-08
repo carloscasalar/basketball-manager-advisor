@@ -41,6 +41,8 @@
             $this->teamMemberRepository->expects()->findByUniformNumber(self::UNIFORM_NUMBER)->andReturns(null);
             $this->teamMemberRepository->expects()->create($teamMember);
             $this->addTeamMember->execute($teamMember);
+
+            self::assertTrue(true,'This assertion prevents risky warning');
         }
 
         /**
