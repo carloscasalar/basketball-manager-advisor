@@ -12,7 +12,7 @@
     use ManagerAdvisor\Usecase\AddTeamMember;
     use ManagerAdvisor\Domain\TeamMember;
     use ManagerAdvisor\Domain\TeamMemberRepositoryInterface;
-    use ManagerAdvisor\Domain\DuplicateUniformNameException;
+    use ManagerAdvisor\Domain\DuplicateUniformNumberException;
 
     class AddTeamMemberTest extends TestCase {
         
@@ -50,7 +50,7 @@
             $existingPlayer = $this->getPlayer(self::UNIFORM_NUMBER, self::SCORE);
             $this->teamMemberRepository->expects()->findByUniformNumber(self::UNIFORM_NUMBER)->andReturns($existingPlayer);
 
-            $this->expectException(DuplicateUniformNameException::class);
+            $this->expectException(DuplicateUniformNumberException::class);
             $newPlayer = $this->getPlayer(self::UNIFORM_NUMBER, self::SCORE);
             $this->addTeamMember->execute($newPlayer);
         }
