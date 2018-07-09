@@ -6,7 +6,8 @@
     use ManagerAdvisor\Domain\Role;
     use ManagerAdvisor\Domain\TeamMember;
     use ManagerAdvisor\Injector\Injector;
-    use ManagerAdvisor\Query\RoleQueries;
+    use ManagerAdvisor\Query\GetDefaultIdealRole;
+    use ManagerAdvisor\Query\GetNormalizedRoles;
     use ManagerAdvisor\usecase\AddTeamMember;
     use Symfony\Component\Console\Command\Command;
     use Symfony\Component\Console\Input\InputInterface;
@@ -20,9 +21,14 @@
         const ENTER_UNIFORM_NUMBER = 'Enter uniform number';
 
         /**
-         * @var RoleQueries
+         * @var GetNormalizedRoles
          */
-        private $roleQueries;
+        private $getNormalizedRoles;
+
+        /**
+         * @var GetDefaultIdealRole
+         */
+        private $getDefaultIdealRole;
 
         /**
          * @var AddTeamMember
@@ -36,7 +42,8 @@
 
         public function __construct(Injector $injector) {
             parent::__construct();
-            $this->roleQueries = $injector->getRoleQueries();
+            $this->getNormalizedRoles = $injector->getGetNormalizedRoles();
+            $this->getDefaultIdealRole = $injector->getGetDefaultIdealRole();
             $this->addTeamMember = $injector->getAddTeamMember();
             $this->uniformNumberQuestion = new UniformNumberQuestion(self::ENTER_UNIFORM_NUMBER);
         }
@@ -77,7 +84,7 @@
         }
 
         private function askIdealRole(InputInterface $input, OutputInterface $output, $helper): Role {
-            $normalizedRoles = $this->roleQueries->getNormalizedRoles();
+            $normalizedRoles = $this->getNormalizedRoles->execute();
             $roleDescriptions = array_map(
                 function (Role $role): string {
                     return $role->getDescription();
@@ -87,7 +94,7 @@
             $question = new ChoiceQuestion(
                 '<question>Enter the ideal Role code of the team member (Default Point Guard):</question>',
                 $roleDescriptions,
-                $this->roleQueries->getDefaultIdealRole()->getCode()
+                $this->getDefaultIdealRole->execute()->getCode()
             );
             $question->setNormalizer(function (string $value): string {
                 return $value ? strtoupper(trim($value)) : '';
