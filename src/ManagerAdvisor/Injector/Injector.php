@@ -8,7 +8,8 @@
     use ManagerAdvisor\Persistence\RoleRepository;
     use ManagerAdvisor\Persistence\StoreManager;
     use ManagerAdvisor\Persistence\TeamMemberRepository;
-    use ManagerAdvisor\Query\RoleQueries;
+    use ManagerAdvisor\Query\GetDefaultIdealRole;
+    use ManagerAdvisor\Query\GetNormalizedRoles;
     use ManagerAdvisor\usecase\AddTeamMember;
     use ManagerAdvisor\Usecase\DeleteTeamMember;
 
@@ -32,9 +33,14 @@
         private $teamMemberRepository;
 
         /**
-         * @var RoleQueries
+         * @var GetNormalizedRoles
          */
-        private $roleQueries;
+        private $getNormalizedRoles;
+
+        /**
+         * @var GetDefaultIdealRole
+         */
+        private $getDefaultIdealRole;
 
         /**
          * @var AddTeamMember
@@ -58,7 +64,8 @@
             $this->roleRepository = new RoleRepository($this->storeManager);
             $this->teamMemberRepository = new TeamMemberRepository($this->storeManager, $this->roleRepository);
 
-            $this->roleQueries = new RoleQueries($this->roleRepository);
+            $this->getNormalizedRoles = new GetNormalizedRoles($this->roleRepository);
+            $this->getDefaultIdealRole = new GetDefaultIdealRole($this->roleRepository);
 
             $this->addTeamMember = new AddTeamMember($this->teamMemberRepository);
             $this->deleteTeamMember = new DeleteTeamMember($this->teamMemberRepository);
@@ -86,10 +93,17 @@
         }
 
         /**
-         * @return RoleQueries
+         * @return GetNormalizedRoles
          */
-        public function getRoleQueries(): RoleQueries {
-            return $this->roleQueries;
+        public function getGetNormalizedRoles(): GetNormalizedRoles {
+            return $this->getNormalizedRoles;
+        }
+
+        /**
+         * @return GetDefaultIdealRole
+         */
+        public function getGetDefaultIdealRole(): GetDefaultIdealRole {
+            return $this->getDefaultIdealRole;
         }
 
         /**

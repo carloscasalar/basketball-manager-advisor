@@ -4,26 +4,21 @@
 
     use ManagerAdvisor\Domain\Role;
     use ManagerAdvisor\Domain\RoleRepositoryInterface;
-    use ManagerAdvisor\Query\RoleQueries;
+    use ManagerAdvisor\Query\GetDefaultIdealRole;
     use Mockery;
     use PHPUnit\Framework\TestCase;
 
-    class RoleQueriesTest extends TestCase {
+    class GetDefaultIdealRoleTest extends TestCase {
 
         /**
-         * @var RoleQueries
+         * @var GetDefaultIdealRole
          */
-        private $roleQueries;
+        private $getDefaultIdealRole;
 
         /**
          * @var RoleRepositoryInterface
          */
         private $roleRepository;
-
-        /**
-         * @var Role[]
-         */
-        private $normalizedRoles;
 
         /**
          * @var Role
@@ -33,33 +28,24 @@
         protected function setUp() {
             $this->roleRepository = Mockery::mock(RoleRepositoryInterface::class);
 
-            $this->roleQueries = new RoleQueries($this->roleRepository);
+            $this->getDefaultIdealRole = new GetDefaultIdealRole($this->roleRepository);
 
             $this->defaultIdealRole = new Role('PG', 'Point Guard');
 
-            $this->normalizedRoles = [
+            $normalizedRoles = [
                 'A' => new Role("A", "Role A"),
                 'B' => new Role("B", "Role B"),
                 $this->defaultIdealRole->getCode() => $this->defaultIdealRole
             ];
 
-            $this->roleRepository->expects()->getNormalizedRoles()->andReturns($this->normalizedRoles);
-        }
-
-        /**
-         * @test
-         */
-        public function should_return_repository_role_list() {
-            $roles = $this->roleQueries->getNormalizedRoles();
-
-            self::assertEquals($this->normalizedRoles, $roles, 'Should return roles from repository');
+            $this->roleRepository->expects()->getNormalizedRoles()->andReturns($normalizedRoles);
         }
 
         /**
          * @test
          */
         public function should_return_default_ideal_role() {
-            $defaultRole = $this->roleQueries->getDefaultIdealRole();
+            $defaultRole = $this->getDefaultIdealRole->execute();
 
             self::assertEquals($this->defaultIdealRole, $defaultRole, 'Should return Point Guard as default ideal role');
         }
