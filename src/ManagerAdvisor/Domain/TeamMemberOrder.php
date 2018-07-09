@@ -10,17 +10,17 @@
         /**
          * @var string
          */
-        private $code;
+        private $criteria;
 
-        private function __construct($code) {
-            $this->code = $code;
+        private function __construct($criteria) {
+            $this->criteria = $criteria;
         }
 
         /**
          * @return string
          */
-        public function getCode(): string {
-            return $this->code;
+        public function getCriteria(): string {
+            return $this->criteria;
         }
 
         public static function arbitrary(): TeamMemberOrder{

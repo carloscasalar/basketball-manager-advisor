@@ -3,6 +3,9 @@
     namespace ManagerAdvisor\Persistence;
 
 
+    use ManagerAdvisor\Domain\TeamMemberOrder;
+    use ManagerAdvisor\Persistence\TeamMemberEntityOrder\SorterFactory;
+
     class Store {
         /**
          * @var RoleEntity[]
@@ -79,11 +82,26 @@
 
         public function removeTeamMemberByUniformNumber($uniformNumber) {
             $this->teamMembers = array_filter(
-              $this->teamMembers,
-              function (TeamMemberEntity $teamMember) use ($uniformNumber){
-                  return $teamMember->getUniformNumber() != $uniformNumber;
-              }
+                $this->teamMembers,
+                function (TeamMemberEntity $teamMember) use ($uniformNumber) {
+                    return $teamMember->getUniformNumber() != $uniformNumber;
+                }
             );
+        }
+
+        public function getOrderedTeamMembers(TeamMemberOrder $order): array {
+            $sorterFactory = new SorterFactory($this->roles);
+            $sorter = $sorterFactory->getSorter($order);
+            $members = $this->teamMembers;
+
+            usort(
+                $members,
+                function (TeamMemberEntity $member, TeamMemberEntity $otherMember) use ($sorter) {
+                    return $sorter->sort($member, $otherMember);
+                }
+            );
+
+            return $members;
         }
 
     }
