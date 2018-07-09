@@ -2,7 +2,6 @@
 
     namespace ManagerAdvisor\Persistence\TeamMemberEntityOrder;
 
-
     use ManagerAdvisor\Persistence\RoleEntity;
     use ManagerAdvisor\Persistence\TeamMemberEntity;
 
@@ -17,14 +16,14 @@
             $this->rolesDescriptions = $this->getRoleDescriptions($roles);
         }
 
-        public function sort(TeamMemberEntity $team, TeamMemberEntity $otherTeam): int {
-            $teamRoleDescription = $this->getRoleDescription($team->getRole());
-            $otherTeamRoleDescription = $this->getRoleDescription($otherTeam->getRole());
+        public function sort(TeamMemberEntity $member, TeamMemberEntity $otherMember): int {
+            $teamRoleDescription = $this->getRoleDescription($member->getRole());
+            $otherTeamRoleDescription = $this->getRoleDescription($otherMember->getRole());
 
             $comparision = strcmp($teamRoleDescription, $otherTeamRoleDescription);
 
-            if($comparision === 0){
-                $comparision = $otherTeam->getCoachScore() - $team->getCoachScore();
+            if ($comparision === 0) {
+                $comparision = $otherMember->getCoachScore() - $member->getCoachScore();
             }
 
             return $comparision;
@@ -34,7 +33,7 @@
             return $this->rolesDescriptions[$code];
         }
 
-        private function getRoleDescriptions(array $roles):array {
+        private function getRoleDescriptions(array $roles): array {
             return array_reduce(
                 $roles,
                 function (array $descriptions, RoleEntity $role) {
