@@ -73,7 +73,10 @@
                 $this->member1_C_50
             ];
 
-            self::assertEquals($expectedPlayerList, $normalized, 'Should return all team members in the same order they are stored');
+            self::assertEquals(
+                $this->getUniformRoleAndScore($expectedPlayerList),
+                $this->getUniformRoleAndScore($normalized),
+                'Should return all team members in the same order they are stored');
         }
 
         /**
@@ -88,14 +91,47 @@
                 $this->member3_SG_50
             ];
 
-            self::assertEquals($expectedPlayerList, $normalized, 'Should return members ordered by uniform number');
+            self::assertEquals(
+                $this->getUniformRoleAndScore($expectedPlayerList),
+                $this->getUniformRoleAndScore($normalized),
+                'Should return members ordered by uniform number');
         }
 
+        /**
+         * @test
+         */
+        public function role_and_score_order_should_return_member_list_ordered_asc_by_role_and_desc_by_score() {
+            $normalized = $this->teamMemberRepository->findAll(TeamMemberOrder::byRoleAndScore());
 
-        private function getTeamMember(int $uniformNumber, Role $idealRole, int $coachScore){
+            $expectedPlayerList = [
+                $this->member2_C_100,
+                $this->member1_C_50,
+                $this->member3_SG_50
+            ];
+
+            self::assertEquals(
+                $this->getUniformRoleAndScore($expectedPlayerList),
+                $this->getUniformRoleAndScore($normalized),
+                'Should return members ordered by uniform number');
+        }
+
+        private function getUniformRoleAndScore(array $members): array {
+            return array_map(
+                function (TeamMember $teamMember): string {
+                    return $teamMember->getUniformNumber()
+                        . ' / '
+                        . $teamMember->getIdealRole()->getDescription()
+                        . ' / '
+                        . $teamMember->getCoachScore();
+                },
+                $members
+            );
+        }
+
+        private function getTeamMember(int $uniformNumber, Role $idealRole, int $coachScore) {
             return new TeamMember(
                 $uniformNumber,
-                'Team with uniform number '.$uniformNumber,
+                'Team with uniform number ' . $uniformNumber,
                 $idealRole,
                 $coachScore
             );
@@ -104,7 +140,7 @@
         private function getTeamMemberEntity(int $uniformNumber, string $idealRoleCode, int $coachScore): TeamMemberEntity {
             return new TeamMemberEntity(
                 $uniformNumber,
-                'Team with uniform number '.$uniformNumber,
+                'Team with uniform number ' . $uniformNumber,
                 $idealRoleCode,
                 $coachScore
             );
