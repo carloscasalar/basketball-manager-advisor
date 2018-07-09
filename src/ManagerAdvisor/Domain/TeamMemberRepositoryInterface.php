@@ -4,7 +4,7 @@
 
     interface TeamMemberRepositoryInterface {
         public function findByUniformNumber(int $uniformNUmber): ?TeamMember;
-        public function findAll(): array;
+        public function findAll(TeamMemberOrder $teamMemberOrder): array;
         public function create(TeamMember $teamMember): void;
         public function deleteByUniformNumber(int $uniformNumber): void;
     }

@@ -33,6 +33,11 @@
             $this->addTeamMember = new AddTeamMember($this->teamMemberRepository);
         }
 
+        public function tearDown() {
+            parent::tearDown();
+            Mockery::close();
+        }
+
         /**
          * @test
          */
@@ -73,11 +78,6 @@
             $player = $this->getPlayer(self::UNIFORM_NUMBER, -1);
             $this->expectException(InvalidScoreException::class);
             $this->addTeamMember->execute($player);
-        }
-
-        public function tearDown() {
-            parent::tearDown();
-            Mockery::close();
         }
 
         private function getPlayer(int $uniformNumber, int $score) {

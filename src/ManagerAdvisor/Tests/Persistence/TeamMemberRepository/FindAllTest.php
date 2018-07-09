@@ -5,6 +5,7 @@
 
     use ManagerAdvisor\Domain\Role;
     use ManagerAdvisor\Domain\TeamMember;
+    use ManagerAdvisor\Domain\TeamMemberOrder;
     use ManagerAdvisor\Domain\TeamMemberRepositoryInterface;
     use ManagerAdvisor\Persistence\RoleEntity;
     use ManagerAdvisor\Persistence\RoleRepository;
@@ -51,7 +52,7 @@
          * @test
          */
         public function should_return_team_member_list_normalized_by_uniform_id() {
-            $normalized = $this->teamMemberRepository->findAll();
+            $normalized = $this->teamMemberRepository->findAll(TeamMemberOrder::arbitrary());
 
             $expectedPlayerList = [
                 $this->getTeamMemberB(),

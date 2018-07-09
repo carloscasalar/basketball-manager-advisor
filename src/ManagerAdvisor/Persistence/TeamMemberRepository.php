@@ -5,6 +5,7 @@
 
     use ManagerAdvisor\Domain\RoleRepositoryInterface;
     use ManagerAdvisor\Domain\TeamMember;
+    use ManagerAdvisor\Domain\TeamMemberOrder;
     use ManagerAdvisor\Domain\TeamMemberRepositoryInterface;
 
     class TeamMemberRepository implements TeamMemberRepositoryInterface {
@@ -67,7 +68,7 @@
             return $teamMemberEntity;
         }
 
-        public function findAll(): array {
+        public function findAll(TeamMemberOrder $teamMemberOrder): array {
             $store = $this->storeManager->load();
             $normalizedRoles = $this->roleRepository->getNormalizedRoles();
             return array_map(
