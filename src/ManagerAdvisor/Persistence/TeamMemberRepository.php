@@ -5,7 +5,9 @@
 
     use ManagerAdvisor\Domain\RoleRepositoryInterface;
     use ManagerAdvisor\Domain\TeamMember;
+    use ManagerAdvisor\Domain\TeamMemberOrder;
     use ManagerAdvisor\Domain\TeamMemberRepositoryInterface;
+    use ManagerAdvisor\Persistence\TeamMemberEntityOrder\SorterFactory;
 
     class TeamMemberRepository implements TeamMemberRepositoryInterface {
         const FIRST_SEARCH_RESULT = 1;
@@ -67,14 +69,15 @@
             return $teamMemberEntity;
         }
 
-        public function findAll(): array {
+        public function findAll(TeamMemberOrder $teamMemberOrder): array {
             $store = $this->storeManager->load();
+
             $normalizedRoles = $this->roleRepository->getNormalizedRoles();
             return array_map(
                 function (TeamMemberEntity $teamMemberEntity) use ($normalizedRoles): TeamMember {
                     return $this->teamMemberAdapter->toTeamMember($teamMemberEntity, $normalizedRoles);
                 },
-                $store->getTeamMembers()
+                $store->getOrderedTeamMembers($teamMemberOrder)
             );
         }
 
