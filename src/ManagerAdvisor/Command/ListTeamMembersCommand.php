@@ -2,17 +2,14 @@
 
     namespace ManagerAdvisor\Command;
 
+    use ManagerAdvisor\Command\Printer\TeamMemberListTablePrinter;
     use ManagerAdvisor\Command\View\OrderAdapter;
     use ManagerAdvisor\Command\View\OrderOptions;
-    use ManagerAdvisor\Command\View\TeamMemberTableRowAdapter;
     use ManagerAdvisor\Command\View\TeamMemberViewAdapter;
-    use ManagerAdvisor\Domain\TeamMemberOrder;
     use ManagerAdvisor\Injector\Injector;
     use ManagerAdvisor\Tests\Usecase\ListTeamMembersTest;
     use ManagerAdvisor\Usecase\ListTeamMembers;
     use Symfony\Component\Console\Command\Command;
-    use Symfony\Component\Console\Helper\Table;
-    use Symfony\Component\Console\Helper\TableCell;
     use Symfony\Component\Console\Input\InputDefinition;
     use Symfony\Component\Console\Input\InputInterface;
     use Symfony\Component\Console\Input\InputOption;
@@ -31,11 +28,6 @@
         private $teamMemberAdapter;
 
         /**
-         * @var TeamMemberTableRowAdapter
-         */
-        private $teamMemberTableRowAdapter;
-
-        /**
          * @var OrderAdapter
          */
         private $orderAdapter;
@@ -44,7 +36,6 @@
             parent::__construct();
             $this->listTeamMembers = new ListTeamMembers($injector->getTeamMemberRepository());
             $this->teamMemberAdapter = new TeamMemberViewAdapter();
-            $this->teamMemberTableRowAdapter = new TeamMemberTableRowAdapter();
             $this->orderAdapter = new OrderAdapter();
         }
 
@@ -67,7 +58,7 @@
                             'format',
                             'f',
                             InputOption::VALUE_OPTIONAL,
-                            'Format of the list to show. Available formats are TABLE, JSON',
+                            'Printer of the list to show. Available formats are TABLE, JSON',
                             'TABLE')
                     ))
                 )
@@ -78,19 +69,9 @@
             $order = $this->readOrder($input, $output);
 
             try {
-                $teamMembers = array_map(
-                    $this->teamMemberTableRowAdapter->toTableRowCallback(),
-                    $this->listTeamMembers->execute($order)
-                );
-
-                $table = new Table($output);
-                $table
-                    ->setHeaders(array(
-                        array(new TableCell('Team members', array('colspan' => 4))),
-                        array('UniformNumber', 'Name', 'Ideal role', 'Coach score')
-                    ))
-                    ->setRows($teamMembers);
-                $table->render();
+                $teamMembers = $this->listTeamMembers->execute($order);
+                $printer = new TeamMemberListTablePrinter($output);
+                $printer->render($teamMembers);
             } catch (\Exception $exception) {
                 $output->writeln('<error>Error while listing team member list: ' . $exception->getMessage() . '</error>');
             }
