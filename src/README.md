@@ -62,3 +62,16 @@ Add a team member can be performed with this command:
 To delete a team member:    
 
     docker run --rm -it -v /YOUR/LOCAL/PROJECTS/DIR/kata-football:/opt -w /opt shippingdocker/php-composer:latest php bin/console.php deleteTeamMember
+    
+To list team members:
+    
+    docker run --rm -it -v /YOUR/LOCAL/PROJECTS/DIR/kata-football:/opt -w /opt shippingdocker/php-composer:latest php bin/console.php listTeamMembers
+    
+You can set the order list with `-o` option:
+  * `ARBITRARY`. Members will be listed in an arbitrary order. This is de default option.
+  * `UNIFORM_NUMBER`. Member list is ordered by uniform number ascendant.     
+  * `ROLE_AND_SCORE`. Member list is ordered by role ascendant and score descendant.
+  
+You can also set the format of the list with `-f` option:
+  * `TABLE`. Member list will be printed in a table.
+  * `JSON`. Member list will be printed in JSON format.      

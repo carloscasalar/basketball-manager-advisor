@@ -6,4 +6,8 @@
         const JSON = 'JSON';
 
         const DEFAULT = self::TABLE;
+
+        public function isInvalid($format): bool{
+            return !in_array($format, [self::TABLE, self::JSON]);
+        }
     }

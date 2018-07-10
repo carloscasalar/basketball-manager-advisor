@@ -2,10 +2,10 @@
 
     namespace ManagerAdvisor\Command;
 
-    use ManagerAdvisor\Command\Printer\TeamMemberListTablePrinter;
+    use ManagerAdvisor\Command\Printer\PrinterFactory;
+    use ManagerAdvisor\Command\View\FormatOptions;
     use ManagerAdvisor\Command\View\OrderAdapter;
     use ManagerAdvisor\Command\View\OrderOptions;
-    use ManagerAdvisor\Command\View\TeamMemberViewAdapter;
     use ManagerAdvisor\Injector\Injector;
     use ManagerAdvisor\Tests\Usecase\ListTeamMembersTest;
     use ManagerAdvisor\Usecase\ListTeamMembers;
@@ -23,20 +23,20 @@
         private $listTeamMembers;
 
         /**
-         * @var TeamMemberViewAdapter
-         */
-        private $teamMemberAdapter;
-
-        /**
          * @var OrderAdapter
          */
         private $orderAdapter;
 
+        /**
+         * @var FormatOptions
+         */
+        private $formatOptions;
+
         public function __construct(Injector $injector) {
             parent::__construct();
             $this->listTeamMembers = new ListTeamMembers($injector->getTeamMemberRepository());
-            $this->teamMemberAdapter = new TeamMemberViewAdapter();
             $this->orderAdapter = new OrderAdapter();
+            $this->formatOptions = new FormatOptions();
         }
 
         protected function configure() {
@@ -58,8 +58,10 @@
                             'format',
                             'f',
                             InputOption::VALUE_OPTIONAL,
-                            'Printer of the list to show. Available formats are TABLE, JSON',
-                            'TABLE')
+                            sprintf('Printer of the list to show. Available formats are %s, %s',
+                                FormatOptions::TABLE, FormatOptions::JSON
+                            ),
+                            FormatOptions::DEFAULT)
                     ))
                 )
                 ->setHelp('List all team members. Default order is arbitrary. Default format is table.');
@@ -68,9 +70,17 @@
         protected function execute(InputInterface $input, OutputInterface $output) {
             $order = $this->readOrder($input, $output);
 
+            $format = strtoupper($input->getOption('format'));
+            if ($this->formatOptions->isInvalid($format)) {
+                $output->writeln(sprintf('<error>Unknown format option "%s", using "%s" option instead.</error>', $format, FormatOptions::DEFAULT));
+                $format = FormatOptions::DEFAULT;
+            }
+
             try {
                 $teamMembers = $this->listTeamMembers->execute($order);
-                $printer = new TeamMemberListTablePrinter($output);
+
+                $printerFactory = new PrinterFactory($output);
+                $printer = $printerFactory->getPrinter($format);
                 $printer->render($teamMembers);
             } catch (\Exception $exception) {
                 $output->writeln('<error>Error while listing team member list: ' . $exception->getMessage() . '</error>');
