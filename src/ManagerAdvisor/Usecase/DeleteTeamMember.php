@@ -5,7 +5,7 @@
     use ManagerAdvisor\Domain\TeamMemberRepositoryInterface;
 
     class DeleteTeamMember {
-        /**ç
+        /**
          * @var TeamMemberRepositoryInterface
          */
         private $teamMemberRepository;
